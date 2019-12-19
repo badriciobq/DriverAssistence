@@ -235,9 +235,12 @@ void * Processor::doProcess(void * id)
             double min, max;
             cv::minMaxLoc(plate, &min, &max);
 
-            for(int m = 0; m < plate.rows; ++m){
-                for(int n = 0; n < plate.cols; ++n){
-                    if(plate_shadow.at<uchar>(m,n) != 0){
+            for(int m = 0; m < plate.rows; ++m)
+            {
+                for(int n = 0; n < plate.cols; ++n)
+                {
+                    if(plate_shadow.at<uchar>(m,n) != 0)
+                    {
                         plate.at<uchar>(m,n) = max;
                     }
                 }
@@ -281,7 +284,7 @@ std::vector<cv::Vec3f> Processor::DetectCircles(cv::Mat &src)
 
     cv::GaussianBlur( src, src, cv::Size(9, 9), 2, 2 );
     // parametros iniciais: src circles, CV_HOUGH_GRADIENT, 1, src.rows/4, 100, 20, 5, 100
-    HoughCircles(src, circles, CV_HOUGH_GRADIENT, 1, src.rows/4, 100, 50, 0, 0 );
+    HoughCircles(src, circles, CV_HOUGH_GRADIENT, 1, src.rows/4, 100, 30, 0, 0 );
 
     return circles;
 }
@@ -319,22 +322,25 @@ void Processor::RGB_Zaklouta_2014(cv::Mat &src, cv::Mat &dst)
 
     dst = cv::Mat::zeros(src.rows, src.cols, CV_32FC1);
 
-    for(int i = 0; i < dst.rows; i++)
+    for(int i = 0; i < dst.rows; ++i)
     {
-        for(int j = 0; j < dst.cols; j++)
+        for(int j = 0; j < dst.cols; ++j)
         {
             r = src.at<cv::Vec4b>(i,j)[0];
             g = src.at<cv::Vec4b>(i,j)[1];
             b = src.at<cv::Vec4b>(i,j)[2];
 
-            int sum = 0;
-            if( (r+g+b) == 0){
+            double sum = 0.0;
+            if( (r + g + b) == 0)
+            {
                 sum = 1.0;
-            }else{
-                sum = (double)r+g+b;
+            }
+            else
+            {
+                sum = (double)(r + g + b);
             }
 
-            double calc = std::max(0.0, (double) std::min(r-g, r-b)/(sum));
+            float calc = (float) std::max(0.0, (double) std::min(r-g, r-b)/(sum));
             dst.at<float>(i,j) = calc;
         }
     }
@@ -347,8 +353,10 @@ void Processor::RGB_Zaklouta_2014(cv::Mat &src, cv::Mat &dst)
 
     double threshold = theMean + 4*stddev;
 
-    for(int i = 0; i < dst.rows; ++i) {
-        for (int j = 0; j < dst.cols; ++j) {
+    for(int i = 0; i < dst.rows; ++i)
+    {
+        for (int j = 0; j < dst.cols; ++j)
+        {
             if (dst.at<float>(i, j) >= threshold)
                 dst.at<float>(i, j) = 255;
             else
@@ -358,8 +366,10 @@ void Processor::RGB_Zaklouta_2014(cv::Mat &src, cv::Mat &dst)
 
     dst.convertTo(dst, CV_8UC1);
 
-    cv::Mat kernel = cv::Mat::ones(3, 3, CV_32FC1);
+    cv::Mat kernel = cv::getStructuringElement( CV_SHAPE_ELLIPSE, cv::Size( 3, 3 ), cv::Point( -1, -1 ) );
+    cv::morphologyEx(dst, dst, cv::MORPH_CLOSE, kernel);
     cv::morphologyEx(dst, dst, cv::MORPH_OPEN, kernel);
+
     kernel.release();
 }
 

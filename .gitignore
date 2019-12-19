@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 /openCVLibrary348
+
+*.so
+*.o

@@ -30,7 +30,8 @@ void store_image(cv::Mat toFile, char *vel)
     gettimeofday(&t_time, NULL);
 
     std::stringstream ss;
-    ss << "/sdcard/DriverAssistence/Plate/" << (int) t_time.tv_sec + t_time.tv_usec << "_" << vel << ".jpg";
+    ss << "/sdcard/DriverAssistence/Plate/" << (int) t_time.tv_sec << "_" << t_time.tv_usec << "_" << vel << ".jpg";
+
 
     cv::imwrite(ss.str(), toFile);
 

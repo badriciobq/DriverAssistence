@@ -125,24 +125,6 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
     }
 
-    @Override
-    public void onPause()
-    {
-        super.onPause();
-        if(mOpenCvCameraView != null)
-            mOpenCvCameraView.disableView();
-
-        // Finalize Native Listeners
-        if(isNativeInitialized)
-        {
-            Log.d(TAG, "Chamando finalize!");
-            Finalize();
-            isNativeInitialized = false;
-        }
-
-    }
-
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,

@@ -47,7 +47,7 @@ JNIEXPORT void JNICALL Java_com_example_adas_MainActivity_ProcessImage
     y = rows*0.1;
     width = cols-x;
     height = rows-y-rows*0.25;
-    cv::Rect roi = cv::Rect(x,y,width, height);
+    cv::Rect roi = cv::Rect(x*0.9,y,width, height);
 
 
     if(m_monitor) {
